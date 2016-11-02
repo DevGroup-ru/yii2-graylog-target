@@ -1,0 +1,21 @@
+{
+    "name": "kdjonua/grayii",
+    "description": "Yii2 log target for Graylog2",
+    "type": "library",
+    "require": {
+        "yiisoft/yii2": "~2.0",
+        "graylog2/gelf-php": "~1.5",
+        "psr/log": "~1.0.2"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.2"
+    },
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Kirill Djonua",
+            "email": "k.djonua@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
