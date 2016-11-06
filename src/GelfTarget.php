@@ -106,7 +106,7 @@ class GelfTarget extends Target
      * @param array $data
      * @return Message
      */
-    private function createMessage($data)
+    protected function createMessage($data)
     {
         list($msg, $level, $category, $time) = $data;
         $message = new Message();

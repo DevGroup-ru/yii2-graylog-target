@@ -1,6 +1,6 @@
 {
     "name": "kdjonua/grayii",
-    "description": "Yii2 log target for Graylog2",
+    "description": "Graylog2 log target for Yii2 framework applications",
     "type": "library",
     "require": {
         "yiisoft/yii2": "~2.0",
