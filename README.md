@@ -33,9 +33,9 @@ Configure from config array
 
 ... or as DI component
 
-  ```
-  \Yii::createObject(\kdjonua\grayii\GelfTarget::class)
-  ```
+```php
+\Yii::createObject(\kdjonua\grayii\GelfTarget::class)
+```
 
 ##### Available config parameters:
 
