@@ -6,34 +6,36 @@ Grayii - Graylog2 log target for Yii2 framework applications
 For installation the Grayii library in your projects as composer dependency,
 run the command: 
 
-`php composer.phar require kdjonua/grayii`
+  `php composer.phar require kdjonua/grayii`
 
 ... or just add to composer.json file the following line:
 
-```
-"kdjonua/grayii": "*"
-```
+  ```
+  "kdjonua/grayii": "*"
+  ```
 
 ## Configuration
 
 Configure from config array
 
-```
-'components' => [
+  ```
+  'components' => [
     'log' => [
-        'grayii' => [
-            'class' => \kdjonua\grayii\GelfTarget::class,
-            'host' => 'http://graylog2-server.com',
-            'port' => 12201,
-            'transport' => \Gelf\Transport\HttpTransport::class,
-        ]
+      'grayii' => [
+        'class' => \kdjonua\grayii\GelfTarget::class,
+        'host' => 'http://graylog2-server.com',
+        'port' => 12201,
+        'transport' => \Gelf\Transport\HttpTransport::class,
+      ]
     ]
-]
-```
+  ]
+  ```
 
 ... or as DI component
 
-`\Yii::createObject(\kdjonua\grayii\GelfTarget::class)`
+  ```
+  \Yii::createObject(\kdjonua\grayii\GelfTarget::class)
+  ```
 
 ##### Available config parameters:
 
@@ -50,23 +52,24 @@ Configure from config array
 
 - Sent additional data:
 
-    ```php
-    Yii::info([
-        '_field1' => 'value1',
-        '_field2' => 'value2',
-    ]);
-    ```
+  ```php
+  Yii::info([
+    '_field1' => 'value1',
+    '_field2' => 'value2',
+  ]);
+  ```
 
 - Sent exception:
 
-    ```php
-    try {
-      ... running code...
-    } catch (\Throwable $t) {
-      Yii::warning($t);
-    }
-    ```
+  ```php
+  try {
+    ... running code...
+  } catch (\Throwable $t) {
+    Yii::warning($t);
+  }
+  ```
 - Sent short message:
-    ```php
-    Yii::trace('The short message example');
-    ```
+
+  ```php
+  Yii::trace('The short message example');
+  ```
