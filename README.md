@@ -24,7 +24,7 @@ Grayii - Graylog2 log target for Yii2 framework applications
 
 **Param key**|**Optional**|**Default value**|**Description**
 -------------|------------|-----------------|---------------
-`transport`|+|Gelf\Transport\HttpTransport|Transport for publishing a message to Graylog2 server. May accepts next values: `HttpTransport` or `HttpTransport`
+`transport`|+|Gelf\Transport\HttpTransport|Transport for publishing a message to Graylog2 server. May accepts next values: `Gelf\Transport\HttpTransport` or `Gelf\Transport\UdpTransport`
 `host`|+|127.0.0.1|Host of the Graylog2 server
 `port`|+|12201|Port of the Graylog2 input
 `sslOptions`|+|-|instance of `\Gelf\Transport\SslOptions`
