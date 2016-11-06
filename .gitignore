@@ -125,3 +125,5 @@ nbactions.xml
 ### composer template
 vendor/
 composer.lock
+### codeception
+tests/_output/*
