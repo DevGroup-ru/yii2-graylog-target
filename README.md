@@ -6,30 +6,30 @@ Grayii - Graylog2 log target for Yii2 framework applications
 For installation the Grayii library in your projects as composer dependency,
 run the command: 
 
-  `php composer.phar require kdjonua/grayii`
+`php composer.phar require kdjonua/grayii`
 
 ... or just add to composer.json file the following line:
 
-  ```
-  "kdjonua/grayii": "*"
-  ```
+```text
+"kdjonua/grayii": "*"
+```
 
 ## Configuration
 
 Configure from config array
 
-  ```
-  'components' => [
-    'log' => [
-      'grayii' => [
-        'class' => \kdjonua\grayii\GelfTarget::class,
-        'host' => 'http://graylog2-server.com',
-        'port' => 12201,
-        'transport' => \Gelf\Transport\HttpTransport::class,
-      ]
+```php
+'components' => [
+  'log' => [
+    'grayii' => [
+      'class' => \kdjonua\grayii\GelfTarget::class,
+      'host' => 'http://graylog2-server.com',
+      'port' => 12201,
+      'transport' => \Gelf\Transport\HttpTransport::class,
     ]
   ]
-  ```
+]
+```
 
 ... or as DI component
 
