@@ -73,3 +73,9 @@ Configure from config array
   ```php
   Yii::trace('The short message example');
   ```
+
+## Tests
+
+Tests was placed int the **test** directory. Tests can be running by the command:
+
+`php composer.phar exec codecept run`
