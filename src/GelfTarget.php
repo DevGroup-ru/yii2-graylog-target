@@ -6,14 +6,14 @@
 namespace kdjonua\grayii;
 
 use Gelf\Message;
+use Gelf\MessageValidator;
 use Gelf\Publisher;
-use Gelf\Transport\AbstractTransport;
-use Gelf\Transport\HttpTransport;
+use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
-use Gelf\Transport\UdpTransport;
-use kdjonua\grayii\exceptions\InvalidTransportException;
+use kdjonua\grayii\transport\HttpTransport;
 use Psr\Log\LogLevel;
 use Yii;
+use yii\di\Container;
 use yii\log\Logger;
 use yii\log\Target;
 
@@ -23,12 +23,23 @@ use yii\log\Target;
  */
 class GelfTarget extends Target
 {
-    public $transport = HttpTransport::class;
+    public $transport = [
+        'class' => HttpTransport::class
+    ];
 
-    public $host = "0.0.0.0";
-    public $port = "12201";
-    public $path;
-    public $sslOptions;
+    public $publisher = [
+        'class' => Publisher::class
+    ];
+
+    public $messageValidator = [
+        'class' => MessageValidator::class
+    ];
+
+    /**
+     * @var Container
+     */
+    public $container;
+
     public $version = '1.1';
     public $appName;
 
@@ -49,6 +60,8 @@ class GelfTarget extends Target
     {
         parent::init();
         $this->appName = $this->appName ?: Yii::$app->id;
+        $this->container = $this->container ?: Yii::$container;
+        $this->container->set(TransportInterface::class, $this->transport);
     }
 
     /**
@@ -56,8 +69,7 @@ class GelfTarget extends Target
      */
     public function export()
     {
-        $transport = $this->getTransport();
-        $publisher = $this->getPublisher($transport);
+        $publisher = $this->getPublisher();
 
         $messageGenerator = $this->messageGeneratorExtractor();
         foreach ($messageGenerator as $message) {
@@ -77,29 +89,19 @@ class GelfTarget extends Target
     }
 
     /**
-     * @return AbstractTransport
-     * @throws InvalidTransportException
+     * @return TransportInterface
      */
-    protected function getTransport()
+    public function getTransport()
     {
-        switch ($this->transport) {
-            case HttpTransport::class:
-                return new HttpTransport($this->host, $this->port, $this->path, $this->sslOptions);
-                break;
-            case UdpTransport::class:
-                return new UdpTransport($this->host, $this->port, UdpTransport::CHUNK_MAX_COUNT);
-            default:
-                throw new InvalidTransportException($this->transport);
-        }
+        return $this->container->get(TransportInterface::class);
     }
 
     /**
-     * @param TransportInterface $transport
-     * @return Publisher
+     * @return PublisherInterface
      */
-    protected function getPublisher($transport)
+    public function getPublisher()
     {
-        return new Publisher($transport);
+        return $this->container->get(PublisherInterface::class, $this->publisher);
     }
 
     /**

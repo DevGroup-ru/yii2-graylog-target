@@ -22,29 +22,25 @@ Configure from config array
 'components' => [
   'log' => [
     'grayii' => [
-      'class' => \kdjonua\grayii\GelfTarget::class,
-      'host' => 'http://graylog2-server.com',
-      'port' => 12201,
-      'transport' => \Gelf\Transport\HttpTransport::class,
+      'transport' => [
+        'class' => \Gelf\Transport\HttpTransport::class,
+        'host' => 'http://graylog2-server.com',
+        'port' => 12201,
+      ],
+      'appName' => 'app name',
     ]
   ]
 ]
-```
-
-... or as DI component
-
-```php
-\Yii::createObject(\kdjonua\grayii\GelfTarget::class)
 ```
 
 ##### Available config parameters:
 
 **Param key**|**Optional**|**Default value**|**Description**
 -------------|------------|-----------------|---------------
-`transport`|+|Gelf\Transport\HttpTransport|Transport for publishing a message to Graylog2 server. May accepts next values: `Gelf\Transport\HttpTransport` or `Gelf\Transport\UdpTransport`
-`host`|+|127.0.0.1|Host of the Graylog2 server
-`port`|+|12201|Port of the Graylog2 input
-`sslOptions`|+|-|instance of `\Gelf\Transport\SslOptions`
+`transport`|+|Gelf\Transport\HttpTransport|Transport config array for publishing a message to Graylog2 server
+`publisher`|+|Gelf\Publisher|Publisher config array
+`messageValidator`|+|Gelf\MessageValidator|Message validator class for publisher
+`container`|+|\Yii::$container|DI container
 `version`|+|1.1|GELF spec version
 `appName`|+|ID of the application|Category name for log message
 

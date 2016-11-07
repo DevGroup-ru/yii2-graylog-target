@@ -4,9 +4,6 @@ namespace kdjonua\grayii\tests;
 
 use Gelf\Message;
 use Gelf\Transport\HttpTransport;
-use Gelf\Transport\SslOptions;
-use Gelf\Transport\UdpTransport;
-use kdjonua\grayii\exceptions\InvalidTransportException;
 use kdjonua\grayii\GelfTarget;
 use Psr\Log\LogLevel;
 use yii\helpers\ArrayHelper;
@@ -19,26 +16,13 @@ class GelfTargetTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
-
     public function testConfiguration()
     {
         $config = [
-            'transport' => HttpTransport::class,
-            'host' => '127.0.0.1',
-            'port' => '12345',
-            'path' => 'testpath',
-            'sslOptions' => new SslOptions(),
-            'version' => '1.1',
-            'appName' => 'testappname'
+            'transport' => HttpTransport::class
         ];
 
+        /** @var GelfTarget $target */
         $target = \Yii::createObject(
             ArrayHelper::merge(
                 [
@@ -48,59 +32,8 @@ class GelfTargetTest extends \Codeception\Test\Unit
             )
         );
 
-        self::assertEquals(HttpTransport::class, $target->transport);
-        self::assertEquals('127.0.0.1', $target->host);
-        self::assertEquals('12345', $target->port);
-        self::assertEquals('testpath', $target->path);
-        self::assertEquals(SslOptions::class, get_class($target->sslOptions));
-        self::assertEquals('1.1', $target->version);
-        self::assertEquals('testappname', $target->appName);
-    }
-
-    public function transportClassDataProvider()
-    {
-        return [
-            'http transport correct' => [
-                ['transport' => HttpTransport::class],
-                ['exceptionClass' => null]
-            ],
-            'udp transport correct' => [
-                ['transport' => UdpTransport::class],
-                ['exceptionClass' => null]
-            ],
-            'unknown transport with InvalidTransportException' => [
-                ['transport' => 'unknown transport'],
-                ['exceptionClass' => InvalidTransportException::class]
-            ],
-
-        ];
-    }
-
-    /**
-     * @dataProvider transportClassDataProvider
-     */
-    public function testTransport($attrs, $haveException) {
-        $transportClass = $attrs['transport'];
-
-        $target = \Yii::createObject([
-            'class' => GelfTarget::class,
-            'transport' => $transportClass
-        ]);
-
-        $refl = new \ReflectionClass(get_class($target));
-        $method = $refl->getMethod('getTransport');
-        $method->setAccessible(true);
-
-        try {
-            /** @var HttpTransport $transport */
-            $transport = $method->invoke($target);
-
-            self::assertEquals($transportClass, get_class($transport));
-        } catch (\Throwable $t) {
-            if ($haveException) {
-                self::assertEquals(get_class($t), $haveException['exceptionClass']);
-            }
-        }
+        $transport = $target->getTransport();
+        self::assertInstanceOf(HttpTransport::class, $transport);
     }
 
     public function testShortMessageFromGelfMessage()
@@ -251,6 +184,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
                 ]
             ]
         ]);
+
         $refl = new \ReflectionClass(get_class($target));
         $method = $refl->getMethod('messageGeneratorExtractor');
         $method->setAccessible(true);
