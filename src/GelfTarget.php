@@ -7,9 +7,10 @@ namespace kdjonua\grayii;
 
 use Gelf\Message;
 use Gelf\MessageValidator;
-use Gelf\Publisher;
+use Gelf\MessageValidatorInterface;
 use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
+use kdjonua\grayii\publisher\Publisher;
 use kdjonua\grayii\transport\HttpTransport;
 use Psr\Log\LogLevel;
 use Yii;
@@ -61,7 +62,10 @@ class GelfTarget extends Target
         parent::init();
         $this->appName = $this->appName ?: Yii::$app->id;
         $this->container = $this->container ?: Yii::$container;
+
         $this->container->set(TransportInterface::class, $this->transport);
+        $this->container->set(MessageValidatorInterface::class, $this->messageValidator);
+        $this->container->set(PublisherInterface::class, $this->publisher);
     }
 
     /**
@@ -69,12 +73,10 @@ class GelfTarget extends Target
      */
     public function export()
     {
-        $publisher = $this->getPublisher();
-
         $messageGenerator = $this->messageGeneratorExtractor();
         foreach ($messageGenerator as $message) {
             $gelfMessage = $this->createMessage($message);
-            $publisher->publish($gelfMessage);
+            $this->publishMessage($gelfMessage);
         }
     }
 
@@ -150,5 +152,13 @@ class GelfTarget extends Target
      */
     protected function yii2LevelToPsrLevel($yiiLevel) {
         return $this->_logLevels[$yiiLevel];
+    }
+
+    /**
+     * @param $gelfMessage
+     */
+    protected function publishMessage($gelfMessage)
+    {
+        $this->getPublisher()->publish($gelfMessage);
     }
 }
