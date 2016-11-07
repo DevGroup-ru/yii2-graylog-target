@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## next release date: 2.0.0 release
+## 7.11.2016: 2.0.0 release
     - [new] Implements configuration with using DI cotainer
     - [brake] Method `getTransport` now is NOT protected
     - [new] Method `getTransport` now is public
