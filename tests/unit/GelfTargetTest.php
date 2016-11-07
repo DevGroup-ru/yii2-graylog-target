@@ -3,7 +3,7 @@
 namespace kdjonua\grayii\tests;
 
 use Gelf\Message;
-use Gelf\Transport\HttpTransport;
+use Gelf\PublisherInterface;
 use kdjonua\grayii\GelfTarget;
 use Psr\Log\LogLevel;
 use yii\helpers\ArrayHelper;
@@ -15,26 +15,6 @@ class GelfTargetTest extends \Codeception\Test\Unit
      * @var \UnitTester
      */
     protected $tester;
-
-    public function testConfiguration()
-    {
-        $config = [
-            'transport' => HttpTransport::class
-        ];
-
-        /** @var GelfTarget $target */
-        $target = \Yii::createObject(
-            ArrayHelper::merge(
-                [
-                    'class' => GelfTarget::class
-                ],
-                $config
-            )
-        );
-
-        $transport = $target->getTransport();
-        self::assertInstanceOf(HttpTransport::class, $transport);
-    }
 
     public function testShortMessageFromGelfMessage()
     {
@@ -210,5 +190,10 @@ class GelfTargetTest extends \Codeception\Test\Unit
                     throw new \Exception();
             }
         }
+    }
+
+    public function testGetPublisher() {
+        $target = \Yii::createObject(GelfTarget::class);
+        self::assertInstanceOf(PublisherInterface::class, $target->getPublisher());
     }
 }
