@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## next release
+## 8.11.2016: 3.0.0 release
     - [fix] autoload section adds to composer.json
     - [fix] `t.HttpTransport` and `t.UdpTransport`: 'at' symbol makes initialization safely
     - [fix] `k.g.GelfTarget`: `init` method sets a `MessageValidator` and `Publisher` instances to the DI container; publishing message action extracted to the separately method
