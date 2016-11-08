@@ -5,7 +5,6 @@ namespace kdjonua\grayii\tests;
 use Gelf\Message;
 use Gelf\PublisherInterface;
 use kdjonua\grayii\GelfTarget;
-use Psr\Log\LogLevel;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 
@@ -16,11 +15,21 @@ class GelfTargetTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    public function testValidateSimpleMessageFromCreateMessageMessageVersion1_0()
+    public function versionProvider() {
+        return [
+            'GELF message version 1.0' => ['1.0'],
+            'GELF message version 1.1' => ['1.1']
+        ];
+    }
+
+    /**
+     * @dataProvider versionProvider
+     */
+    public function testValidateSimpleMessage($version)
     {
         /** @var GelfTarget $target */
         list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '1.0'
+            'version' => $version
         ]);
 
         /** @var Message $message */
@@ -35,30 +44,14 @@ class GelfTargetTest extends \Codeception\Test\Unit
         self::assertTrue($validateStatus, $reason);
     }
 
-    public function testValidateSimpleMessageFromCreateMessageMessageVersion1_1()
+    /**
+     * @dataProvider versionProvider
+     */
+    public function testValidateExceptionMessage($version)
     {
         /** @var GelfTarget $target */
         list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '1.1'
-        ]);
-
-        /** @var Message $message */
-        $message = $method->invoke($target, [
-            'this is short message', Logger::LEVEL_INFO, null, null
-        ]);
-
-        $validator = $target->getMessageValidator();
-
-        $reason = "";
-        $validateStatus = $validator->validate($message, $reason);
-        self::assertTrue($validateStatus, $reason);
-    }
-
-    public function testValidateExceptionMessageFromCreateMessageMessageVersion1_0()
-    {
-        /** @var GelfTarget $target */
-        list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '1.0'
+            'version' => $version
         ]);
 
         /** @var Message $message */
@@ -78,35 +71,14 @@ class GelfTargetTest extends \Codeception\Test\Unit
         self::assertNotNull($message->getLine());
     }
 
-    public function testValidateExceptionMessageFromCreateMessageMessageVersion1_1()
+    /**
+     * @dataProvider versionProvider
+     */
+    public function testValidateCombinedMessage($version)
     {
         /** @var GelfTarget $target */
         list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '1.1'
-        ]);
-
-        /** @var Message $message */
-        $message = $method->invoke($target, [
-            new \Exception('Test message exception'), Logger::LEVEL_INFO, null, null
-        ]);
-
-        $validator = $target->getMessageValidator();
-
-        $reason = "";
-        $validateStatus = $validator->validate($message, $reason);
-        self::assertTrue($validateStatus, $reason);
-
-        self::assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
-        self::assertTrue(is_string($message->getFullMessage()));
-        self::assertNotNull($message->getFile());
-        self::assertNotNull($message->getLine());
-    }
-
-    public function testValidateMessageWithAdditionalParamsFromCreateMessageMessageVersion1_0()
-    {
-        /** @var GelfTarget $target */
-        list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '1.0'
+            'version' => $version
         ]);
 
         /** @var Message $message */
@@ -129,17 +101,20 @@ class GelfTargetTest extends \Codeception\Test\Unit
         self::assertEquals('Test full message', $message->getFullMessage());
     }
 
-    public function testValidateMessageWithAdditionalParamsFromCreateMessageMessageVersion1_1()
+    /**
+     * @dataProvider versionProvider
+     */
+    public function testValidateCombinedMessageWithSimplifiedShort($version)
     {
         /** @var GelfTarget $target */
         list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '1.1'
+            'version' => $version
         ]);
 
         /** @var Message $message */
         $message = $method->invoke($target, [
             [
-                'short' => 'Test short message',
+                'Test short message',
                 'full' => 'Test full message',
                 '_one' => 1,
                 '_two' => 2
@@ -155,6 +130,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
         self::assertEquals('Test short message', $message->getShortMessage());
         self::assertEquals('Test full message', $message->getFullMessage());
     }
+
 
     public function testAppNameAutoFromGelfMessage()
     {

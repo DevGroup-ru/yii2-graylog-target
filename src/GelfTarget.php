@@ -143,6 +143,8 @@ class GelfTarget extends Target
         } elseif (is_array($msg)) {
             if (!empty($msg['short'])) {
                 $message->setShortMessage($msg['short']);
+            } elseif (!empty($msg[0])) {
+                $message->setShortMessage($msg[0]);
             }
 
             if (!empty($msg['full'])) {
