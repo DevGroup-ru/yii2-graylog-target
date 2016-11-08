@@ -73,7 +73,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
         self::assertTrue($validateStatus, $reason);
 
         self::assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
-        self::assertTrue(is_array($message->getFullMessage()));
+        self::assertTrue(is_string($message->getFullMessage()));
         self::assertNotNull($message->getFile());
         self::assertNotNull($message->getLine());
     }
@@ -97,7 +97,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
         self::assertTrue($validateStatus, $reason);
 
         self::assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
-        self::assertTrue(is_array($message->getFullMessage()));
+        self::assertTrue(is_string($message->getFullMessage()));
         self::assertNotNull($message->getFile());
         self::assertNotNull($message->getLine());
     }

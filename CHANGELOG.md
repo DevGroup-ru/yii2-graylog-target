@@ -4,8 +4,9 @@
     - [fix] autoload section adds to composer.json
     - [fix] `t.HttpTransport` and `t.UdpTransport`: 'at' symbol makes initialization safely
     - [fix] `k.g.GelfTarget`: `init` method sets a `MessageValidator` and `Publisher` instances to the DI container; publishing message action extracted to the separately method
-    - [fix] method `getPublisher`: removed second param from `container->get` function 
-    - [fix] method `createMessage`: if $msg is array - message gets a "short" message and "full" message from array keys 
+    - [fix] `getPublisher` method: removed second param from `container->get` function 
+    - [fix] `createMessage` method: if $msg is array - message gets a "short" message and "full" message from array keys 
+    - [fix] `createMessage` method: if message instanse of Throwable, `fullMessage` will be a string (stack trace as string)
     - [new] add public method `getMessageValidator` to `k.g.GraylogTarget`
     - [new] Created `k.g.p.Publisher` class, which extends `Gelf\Publisher` but have not optional construct params
 

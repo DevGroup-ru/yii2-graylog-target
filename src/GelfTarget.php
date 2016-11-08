@@ -135,7 +135,7 @@ class GelfTarget extends Target
             }
 
             $message->setShortMessage($short . ' ' . get_class($msg) . ' ' . $msg->getMessage());
-            $message->setFullMessage($msg->getTrace());
+            $message->setFullMessage($msg->getTraceAsString());
             $message->setFile($msg->getFile());
             $message->setLine($msg->getLine());
         } elseif (is_string($msg)) {
