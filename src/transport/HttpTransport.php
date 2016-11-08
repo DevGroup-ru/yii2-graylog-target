@@ -17,10 +17,10 @@ class HttpTransport extends \Gelf\Transport\HttpTransport implements Configurabl
     public function __construct($config = [])
     {
         parent::__construct(
-            $config['host'] ?: null,
-            $config['port'] ?: null,
-            $config['path'] ?: null,
-            $config['sslOptions'] ?: null
+            @$config['host'] ?: null,
+            @$config['port'] ?: null,
+            @$config['path'] ?: null,
+            @$config['sslOptions'] ?: null
         );
     }
 }

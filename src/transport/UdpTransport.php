@@ -16,9 +16,9 @@ class UdpTransport extends \Gelf\Transport\UdpTransport implements Configurable
     public function __construct($config = [])
     {
         parent::__construct(
-            $config['host'] ?: self::DEFAULT_HOST,
-            $config['port'] ?: self::DEFAULT_PORT,
-            $config['chunkSize'] ?: self::CHUNK_SIZE_WAN
+            @$config['host'] ?: self::DEFAULT_HOST,
+            @$config['port'] ?: self::DEFAULT_PORT,
+            @$config['chunkSize'] ?: self::CHUNK_SIZE_WAN
         );
     }
 }

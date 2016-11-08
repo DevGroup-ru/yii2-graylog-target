@@ -3,7 +3,7 @@
 namespace kdjonua\grayii\tests;
 
 use Gelf\Message;
-use Gelf\Transport\HttpTransport;
+use Gelf\PublisherInterface;
 use kdjonua\grayii\GelfTarget;
 use Psr\Log\LogLevel;
 use yii\helpers\ArrayHelper;
@@ -16,89 +16,144 @@ class GelfTargetTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    public function testConfiguration()
+    public function testValidateSimpleMessageFromCreateMessageMessageVersion1_0()
     {
-        $config = [
-            'transport' => HttpTransport::class
-        ];
-
         /** @var GelfTarget $target */
-        $target = \Yii::createObject(
-            ArrayHelper::merge(
-                [
-                    'class' => GelfTarget::class
-                ],
-                $config
-            )
-        );
-
-        $transport = $target->getTransport();
-        self::assertInstanceOf(HttpTransport::class, $transport);
-    }
-
-    public function testShortMessageFromGelfMessage()
-    {
-        list($target, $method) = $this->createCreateMessageMethod();
+        list($target, $method) = $this->createCreateMessageMethod([
+            'version' => '1.0'
+        ]);
 
         /** @var Message $message */
         $message = $method->invoke($target, [
             'this is short message', Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals('this is short message', $message->getShortMessage());
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        self::assertTrue($validateStatus, $reason);
     }
 
-    public function testLogCategoryFromGelfMessage()
+    public function testValidateSimpleMessageFromCreateMessageMessageVersion1_1()
     {
-        list($target, $method) = $this->createCreateMessageMethod();
-
-        /** @var Message $message */
-        $message = $method->invoke($target, [
-            '', Logger::LEVEL_INFO, null, null
-        ]);
-
-        self::assertEquals(LogLevel::INFO, $message->getLevel());
-    }
-
-    public function testTimestampFromGelfMessage()
-    {
-        list($target, $method) = $this->createCreateMessageMethod();
-
-        $ts = time();
-        /** @var Message $message */
-        $message = $method->invoke($target, [
-            '', Logger::LEVEL_INFO, null, $ts
-        ]);
-
-        self::assertEquals($ts, $message->getTimestamp());
-    }
-
-    public function testVersionFromGelfMessage()
-    {
+        /** @var GelfTarget $target */
         list($target, $method) = $this->createCreateMessageMethod([
-            'version' => '2.0'
+            'version' => '1.1'
         ]);
 
         /** @var Message $message */
         $message = $method->invoke($target, [
-            '', Logger::LEVEL_INFO, null, null
+            'this is short message', Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals('2.0', $message->getVersion());
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        self::assertTrue($validateStatus, $reason);
     }
 
-    public function testAppNameFromGelfMessage()
+    public function testValidateExceptionMessageFromCreateMessageMessageVersion1_0()
     {
+        /** @var GelfTarget $target */
         list($target, $method) = $this->createCreateMessageMethod([
-            'appName' => 'testapp'
+            'version' => '1.0'
         ]);
 
         /** @var Message $message */
         $message = $method->invoke($target, [
-            '', Logger::LEVEL_INFO, null, null
+            new \Exception('Test message exception'), Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals('testapp', $message->getHost());
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        self::assertTrue($validateStatus, $reason);
+
+        self::assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
+        self::assertTrue(is_string($message->getFullMessage()));
+        self::assertNotNull($message->getFile());
+        self::assertNotNull($message->getLine());
+    }
+
+    public function testValidateExceptionMessageFromCreateMessageMessageVersion1_1()
+    {
+        /** @var GelfTarget $target */
+        list($target, $method) = $this->createCreateMessageMethod([
+            'version' => '1.1'
+        ]);
+
+        /** @var Message $message */
+        $message = $method->invoke($target, [
+            new \Exception('Test message exception'), Logger::LEVEL_INFO, null, null
+        ]);
+
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        self::assertTrue($validateStatus, $reason);
+
+        self::assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
+        self::assertTrue(is_string($message->getFullMessage()));
+        self::assertNotNull($message->getFile());
+        self::assertNotNull($message->getLine());
+    }
+
+    public function testValidateMessageWithAdditionalParamsFromCreateMessageMessageVersion1_0()
+    {
+        /** @var GelfTarget $target */
+        list($target, $method) = $this->createCreateMessageMethod([
+            'version' => '1.0'
+        ]);
+
+        /** @var Message $message */
+        $message = $method->invoke($target, [
+            [
+                'short' => 'Test short message',
+                'full' => 'Test full message',
+                '_one' => 1,
+                '_two' => 2
+            ], Logger::LEVEL_INFO, null, null
+        ]);
+
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        self::assertTrue($validateStatus, $reason);
+
+        self::assertEquals('Test short message', $message->getShortMessage());
+        self::assertEquals('Test full message', $message->getFullMessage());
+    }
+
+    public function testValidateMessageWithAdditionalParamsFromCreateMessageMessageVersion1_1()
+    {
+        /** @var GelfTarget $target */
+        list($target, $method) = $this->createCreateMessageMethod([
+            'version' => '1.1'
+        ]);
+
+        /** @var Message $message */
+        $message = $method->invoke($target, [
+            [
+                'short' => 'Test short message',
+                'full' => 'Test full message',
+                '_one' => 1,
+                '_two' => 2
+            ], Logger::LEVEL_INFO, null, null
+        ]);
+
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        self::assertTrue($validateStatus, $reason);
+
+        self::assertEquals('Test short message', $message->getShortMessage());
+        self::assertEquals('Test full message', $message->getFullMessage());
     }
 
     public function testAppNameAutoFromGelfMessage()
@@ -210,5 +265,10 @@ class GelfTargetTest extends \Codeception\Test\Unit
                     throw new \Exception();
             }
         }
+    }
+
+    public function testGetPublisher() {
+        $target = \Yii::createObject(GelfTarget::class);
+        self::assertInstanceOf(PublisherInterface::class, $target->getPublisher());
     }
 }

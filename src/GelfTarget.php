@@ -7,9 +7,10 @@ namespace kdjonua\grayii;
 
 use Gelf\Message;
 use Gelf\MessageValidator;
-use Gelf\Publisher;
+use Gelf\MessageValidatorInterface;
 use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
+use kdjonua\grayii\publisher\Publisher;
 use kdjonua\grayii\transport\HttpTransport;
 use Psr\Log\LogLevel;
 use Yii;
@@ -61,7 +62,10 @@ class GelfTarget extends Target
         parent::init();
         $this->appName = $this->appName ?: Yii::$app->id;
         $this->container = $this->container ?: Yii::$container;
+
         $this->container->set(TransportInterface::class, $this->transport);
+        $this->container->set(MessageValidatorInterface::class, $this->messageValidator);
+        $this->container->set(PublisherInterface::class, $this->publisher);
     }
 
     /**
@@ -69,12 +73,10 @@ class GelfTarget extends Target
      */
     public function export()
     {
-        $publisher = $this->getPublisher();
-
         $messageGenerator = $this->messageGeneratorExtractor();
         foreach ($messageGenerator as $message) {
             $gelfMessage = $this->createMessage($message);
-            $publisher->publish($gelfMessage);
+            $this->publishMessage($gelfMessage);
         }
     }
 
@@ -101,7 +103,14 @@ class GelfTarget extends Target
      */
     public function getPublisher()
     {
-        return $this->container->get(PublisherInterface::class, $this->publisher);
+        return $this->container->get(PublisherInterface::class);
+    }
+
+    /**
+     * @return MessageValidatorInterface
+     */
+    public function getMessageValidator() {
+        return $this->container->get(MessageValidatorInterface::class);
     }
 
     /**
@@ -126,12 +135,20 @@ class GelfTarget extends Target
             }
 
             $message->setShortMessage($short . ' ' . get_class($msg) . ' ' . $msg->getMessage());
-            $message->setFullMessage($msg->getTrace());
+            $message->setFullMessage($msg->getTraceAsString());
             $message->setFile($msg->getFile());
             $message->setLine($msg->getLine());
         } elseif (is_string($msg)) {
             $message->setShortMessage($msg);
         } elseif (is_array($msg)) {
+            if (!empty($msg['short'])) {
+                $message->setShortMessage($msg['short']);
+            }
+
+            if (!empty($msg['full'])) {
+                $message->setFullMessage($msg['full']);
+            }
+
             foreach ($msg as $key => $value) {
                 if (strpos($key, '_') === 0) {
                     $message->setAdditional($key, $value);
@@ -150,5 +167,13 @@ class GelfTarget extends Target
      */
     protected function yii2LevelToPsrLevel($yiiLevel) {
         return $this->_logLevels[$yiiLevel];
+    }
+
+    /**
+     * @param $gelfMessage
+     */
+    protected function publishMessage($gelfMessage)
+    {
+        $this->getPublisher()->publish($gelfMessage);
     }
 }
