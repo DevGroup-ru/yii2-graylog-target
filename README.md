@@ -6,7 +6,7 @@ Grayii - Graylog2 log target for Yii2 framework applications
 For installation the Grayii library in your projects as composer dependency,
 run the command: 
 
-`php composer.phar require kdjonua/grayii`
+`php composer.phar require kdjonua/Grayii:*`
 
 ... or just add to composer.json file the following line:
 
@@ -50,8 +50,10 @@ Configure from config array
 
   ```php
   Yii::info([
-    '_field1' => 'value1',
-    '_field2' => 'value2',
+    'short' => 'Short message or title',  // required.
+    'full' => 'Full message',             // optional. full message of log. For example, may be a stack trace as string or other detalized message
+    '_field1' => 'value1',                // optional. additional field starts with '_' symbol
+    '_field2' => 'value2',                // optional. additional field starts with '_' symbol
   ]);
   ```
 
