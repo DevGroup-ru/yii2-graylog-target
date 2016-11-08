@@ -2,6 +2,9 @@
 
 $src = [
     'exceptions//InvalidTransportException.php',
+    'publisher//Publisher.php',
+    'transport//HttpTransport.php',
+    'transport//UdpTransport.php',
     'GelfTarget.php',
 ];
 

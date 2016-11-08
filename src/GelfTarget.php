@@ -103,7 +103,14 @@ class GelfTarget extends Target
      */
     public function getPublisher()
     {
-        return $this->container->get(PublisherInterface::class, $this->publisher);
+        return $this->container->get(PublisherInterface::class);
+    }
+
+    /**
+     * @return MessageValidatorInterface
+     */
+    public function getMessageValidator() {
+        return $this->container->get(MessageValidatorInterface::class);
     }
 
     /**
@@ -134,6 +141,14 @@ class GelfTarget extends Target
         } elseif (is_string($msg)) {
             $message->setShortMessage($msg);
         } elseif (is_array($msg)) {
+            if (!empty($msg['short'])) {
+                $message->setShortMessage($msg['short']);
+            }
+
+            if (!empty($msg['full'])) {
+                $message->setFullMessage($msg['full']);
+            }
+
             foreach ($msg as $key => $value) {
                 if (strpos($key, '_') === 0) {
                     $message->setAdditional($key, $value);
