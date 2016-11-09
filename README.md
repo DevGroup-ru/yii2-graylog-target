@@ -77,3 +77,17 @@ Configure from config array
 Tests was placed int the **test** directory. Tests can be running by the command:
 
 `php composer.phar exec codecept run`
+
+## Tests with different php versions with docker:
+
+- PHP v5.5
+
+    `docker run -it --rm --name php55-for-grayii-tests -v "$PWD":/usr/src/myapp -w /usr/src/myapp php:5.5-cli php vendor/bin/codecept run`
+
+- PHP v5.6
+
+    `docker run -it --rm --name php56-for-grayii-tests -v "$PWD":/usr/src/myapp -w /usr/src/myapp php:5.6-cli php vendor/bin/codecept run`
+
+- PHP v7.0
+
+    `docker run -it --rm --name php70-for-grayii-tests -v "$PWD":/usr/src/myapp -w /usr/src/myapp php:7.0-cli php vendor/bin/codecept run`
