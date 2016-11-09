@@ -1,6 +1,7 @@
 {
     "name": "devgroup/yii2-graylog-target",
     "description": "Graylog2 log target for Yii2 framework applications",
+    "keywords": ["Yii2", "Graylog", "target", "log"],
     "type": "library",
     "license": "BSD",
     "authors": [
@@ -17,6 +18,7 @@
         "psr/log": "~1.0.2"
     },
     "require-dev": {
+        "yiisoft/yii2-codeception": "~2.0.0",
         "codeception/codeception": "^2.2"
     },
     "autoload": {
