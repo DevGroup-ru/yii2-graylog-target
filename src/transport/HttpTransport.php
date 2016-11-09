@@ -3,13 +3,13 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii\transport;
+namespace devgroup\grayii\transport;
 
 use yii\base\Configurable;
 
 /**
  * Class HttpTransport
- * @package kdjonua\grayii\transport
+ * @package devgroup\grayii\transport
  */
 class HttpTransport extends \Gelf\Transport\HttpTransport implements Configurable
 {

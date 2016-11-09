@@ -1,11 +1,11 @@
 <?php
 
-namespace kdjonua\grayii\tests;
+namespace devgroup\grayii\tests;
 
 use Gelf\Message;
 use Gelf\PublisherInterface;
-use kdjonua\grayii\GelfTarget;
-use kdjonua\grayii\helper\PhpVersionChecker;
+use devgroup\grayii\GelfTarget;
+use devgroup\grayii\helper\PhpVersionChecker;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 

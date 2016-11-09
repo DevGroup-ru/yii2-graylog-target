@@ -3,14 +3,14 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii\publisher;
+namespace devgroup\grayii\publisher;
 
 use Gelf\MessageValidatorInterface;
 use Gelf\Transport\TransportInterface;
 
 /**
  * Class Publisher
- * @package kdjonua\grayii\publisher
+ * @package devgroup\grayii\publisher
  */
 class Publisher extends \Gelf\Publisher
 {

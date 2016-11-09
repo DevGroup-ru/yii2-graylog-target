@@ -3,17 +3,17 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii;
+namespace devgroup\grayii;
 
 use Gelf\Message;
 use Gelf\MessageValidator;
 use Gelf\MessageValidatorInterface;
 use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
-use kdjonua\grayii\helper\PhpVersionChecker;
-use kdjonua\grayii\helper\PhpVersionCheckerInterface;
-use kdjonua\grayii\publisher\Publisher;
-use kdjonua\grayii\transport\HttpTransport;
+use devgroup\grayii\publisher\Publisher;
+use devgroup\grayii\transport\HttpTransport;
+use devgroup\grayii\helper\PhpVersionChecker;
+use devgroup\grayii\helper\PhpVersionCheckerInterface;
 use Psr\Log\LogLevel;
 use Yii;
 use yii\di\Container;
@@ -22,7 +22,7 @@ use yii\log\Target;
 
 /**
  * Class GelfTarget
- * @package kdjonua\grayii
+ * @package devgroup\grayii
  */
 class GelfTarget extends Target
 {

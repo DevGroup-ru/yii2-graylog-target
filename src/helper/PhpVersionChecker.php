@@ -3,11 +3,11 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii\helper;
+namespace devgroup\grayii\helper;
 
 /**
  * Class PhpVersionChecker
- * @package kdjonua\grayii\helper
+ * @package devgroup\grayii\helper
  */
 class PhpVersionChecker implements PhpVersionCheckerInterface
 {

@@ -3,11 +3,11 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii\exceptions;
+namespace devgroup\grayii\exceptions;
 
 /**
  * Class InvalidTransportException
- * @package kdjonua\grayii\exceptions
+ * @package devgroup\grayii\exceptions
  */
 class InvalidTransportException extends \Exception
 {

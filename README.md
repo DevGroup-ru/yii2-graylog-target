@@ -1,17 +1,19 @@
-Grayii - Graylog2 log target for Yii2 framework applications
+yii2-graylog-target
 ===
+
+###### Graylog2 log target for Yii2 framework applications
 
 ## Installation
 
-For installation the Grayii library in your projects as composer dependency,
+For installation the yii2-graylog-target library in your projects as composer dependency,
 run the command: 
 
-`php composer.phar require kdjonua/Grayii:*`
+`php composer.phar require "devgroup/yii2-graylog-target:*"`
 
 ... or just add to composer.json file the following line:
 
 ```text
-"kdjonua/grayii": "*"
+"devgroup/yii2-graylog-target": "*"
 ```
 
 ## Configuration
@@ -50,7 +52,7 @@ Configure from config array
 
   ```php
   Yii::info([
-    'short' => 'Short message or title',  // required.
+    'short' => 'Short message or title',  // required. alternate usage variant: `Short message or title` (without a key 'short', but first item in array)
     'full' => 'Full message',             // optional. full message of log. For example, may be a stack trace as string or other detalized message
     '_field1' => 'value1',                // optional. additional field starts with '_' symbol
     '_field2' => 'value2',                // optional. additional field starts with '_' symbol
@@ -61,7 +63,7 @@ Configure from config array
 
   ```php
   try {
-    ... running code...
+    ... running code with harmful bugs...
   } catch (\Throwable $t) {
     Yii::warning($t);
   }
@@ -69,7 +71,7 @@ Configure from config array
 - Sent short message:
 
   ```php
-  Yii::trace('The short message example');
+  Yii::trace('The short message example'); // or equivalent usage is Yii::trace(['The short message example']);
   ```
 
 ## Tests
