@@ -12,6 +12,8 @@ use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
 use devgroup\grayii\publisher\Publisher;
 use devgroup\grayii\transport\HttpTransport;
+use devgroup\grayii\helper\PhpVersionChecker;
+use devgroup\grayii\helper\PhpVersionCheckerInterface;
 use Psr\Log\LogLevel;
 use Yii;
 use yii\di\Container;
@@ -34,6 +36,10 @@ class GelfTarget extends Target
 
     public $messageValidator = [
         'class' => MessageValidator::class
+    ];
+
+    public $phpVersionChecker = [
+        'class' => PhpVersionChecker::class
     ];
 
     /**
@@ -66,6 +72,8 @@ class GelfTarget extends Target
         $this->container->set(TransportInterface::class, $this->transport);
         $this->container->set(MessageValidatorInterface::class, $this->messageValidator);
         $this->container->set(PublisherInterface::class, $this->publisher);
+
+        $this->container->set(PhpVersionCheckerInterface::class, $this->phpVersionChecker);
     }
 
     /**
@@ -114,6 +122,13 @@ class GelfTarget extends Target
     }
 
     /**
+     * @return PhpVersionCheckerInterface
+     */
+    public function getPhpVersionChecker() {
+        return $this->container->get(PhpVersionCheckerInterface::class);
+    }
+
+    /**
      * @param array $data
      * @return Message
      */
@@ -127,10 +142,10 @@ class GelfTarget extends Target
         $message->setVersion($this->version);
         $message->setHost($this->appName ?: Yii::$app->id);
 
-        if ($msg instanceof \Throwable) {
-            /** @var \Throwable $short */
+        if ($this->isThrowableMessage($msg)) {
             $short = 'Exception';
-            if ($msg instanceof \Error) {
+
+            if ($this->getPhpVersionChecker()->isPhp70() && $msg instanceof \Error) {
                 $short = 'Error';
             }
 
@@ -177,5 +192,14 @@ class GelfTarget extends Target
     protected function publishMessage($gelfMessage)
     {
         $this->getPublisher()->publish($gelfMessage);
+    }
+
+    private function isThrowableMessage($msg)
+    {
+        if ($this->getPhpVersionChecker()->isPhp70()) {
+            return $msg instanceof \Throwable;
+        } else {
+            return $msg instanceof \Exception;
+        }
     }
 }
