@@ -5,6 +5,7 @@ namespace kdjonua\grayii\tests;
 use Gelf\Message;
 use Gelf\PublisherInterface;
 use kdjonua\grayii\GelfTarget;
+use kdjonua\grayii\helper\PhpVersionChecker;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 
@@ -176,6 +177,10 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
     public function testErrorDataFromGelfMessage()
     {
+        if (!(new PhpVersionChecker())->isPhp70()) {
+            return;
+        }
+
         list($target, $method) = $this->createCreateMessageMethod();
 
         $ex = new \Error('Test message');
@@ -204,12 +209,14 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
     public function testMessageGenerator()
     {
+        $versionChecker = new PhpVersionChecker();
+
         $target = \Yii::createObject([
             'class' => GelfTarget::class,
             'messages' => [
                 'test message',
                 new \Exception(),
-                new \Error(),
+                $versionChecker->isPhp70() ? new \Error() : "",
                 [
                     '_testAdditionalField'
                 ]
@@ -232,7 +239,9 @@ class GelfTargetTest extends \Codeception\Test\Unit
                     self::assertEquals(\Exception::class, get_class($message));
                     break;
                 case 3:
-                    self::assertEquals(\Error::class, get_class($message));
+                    if ($versionChecker->isPhp70()) {
+                        self::assertEquals(\Error::class, get_class($message));
+                    }
                     break;
                 case 4:
                     self::assertTrue(is_array($message));
