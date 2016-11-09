@@ -3,13 +3,13 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii\transport;
+namespace devgroup\grayii\transport;
 
 use yii\base\Configurable;
 
 /**
  * Class UdpTransport
- * @package kdjonua\grayii\transport
+ * @package devgroup\grayii\transport
  */
 class UdpTransport extends \Gelf\Transport\UdpTransport implements Configurable
 {

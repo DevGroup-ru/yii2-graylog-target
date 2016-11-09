@@ -1,10 +1,10 @@
 <?php
 
-namespace kdjonua\grayii\tests;
+namespace devgroup\grayii\tests;
 
 use Gelf\Message;
 use Gelf\PublisherInterface;
-use kdjonua\grayii\GelfTarget;
+use devgroup\grayii\GelfTarget;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 

@@ -104,6 +104,5 @@ nbactions.xml
 .nb-gradle/
 ### composer template
 vendor/
-composer.lock
 ### codeception
 tests/_output/*

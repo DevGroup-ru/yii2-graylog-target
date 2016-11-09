@@ -1,15 +1,7 @@
 {
-    "name": "kdjonua/grayii",
+    "name": "devgroup/yii2-graylog-target",
     "description": "Graylog2 log target for Yii2 framework applications",
     "type": "library",
-    "require": {
-        "yiisoft/yii2": "~2.0",
-        "graylog2/gelf-php": "~1.5",
-        "psr/log": "~1.0.2"
-    },
-    "require-dev": {
-        "codeception/codeception": "^2.2"
-    },
     "license": "BSD",
     "authors": [
         {
@@ -18,9 +10,18 @@
         }
     ],
     "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.5",
+        "yiisoft/yii2": "~2.0",
+        "graylog2/gelf-php": "~1.5",
+        "psr/log": "~1.0.2"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.2"
+    },
     "autoload": {
         "psr-4": {
-            "kdjonua\\grayii\\": "src/"
+            "devgroup\\grayii\\": "src/"
         }
     }
 }

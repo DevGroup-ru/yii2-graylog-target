@@ -3,15 +3,15 @@
  * Created by Kirill Djonua <k.djonua@gmail.com>
  */
 
-namespace kdjonua\grayii;
+namespace devgroup\grayii;
 
 use Gelf\Message;
 use Gelf\MessageValidator;
 use Gelf\MessageValidatorInterface;
 use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
-use kdjonua\grayii\publisher\Publisher;
-use kdjonua\grayii\transport\HttpTransport;
+use devgroup\grayii\publisher\Publisher;
+use devgroup\grayii\transport\HttpTransport;
 use Psr\Log\LogLevel;
 use Yii;
 use yii\di\Container;
@@ -20,7 +20,7 @@ use yii\log\Target;
 
 /**
  * Class GelfTarget
- * @package kdjonua\grayii
+ * @package devgroup\grayii
  */
 class GelfTarget extends Target
 {
