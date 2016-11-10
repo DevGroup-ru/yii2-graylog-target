@@ -31,16 +31,20 @@ Configure from config array
 
 ```php
 'components' => [
-  'log' => [
-    'grayii' => [
-      'transport' => [
-        'class' => \Gelf\Transport\HttpTransport::class,
-        'host' => 'http://graylog2-server.com',
-        'port' => 12201,
-      ],
-      'appName' => 'app name',
+    'log' => [
+        'targets' => [
+            'grayii' => [
+                'transport' => [
+                    'class' => \Gelf\Transport\HttpTransport::class,
+                    'host' => 'http://my-graylog2-server.com',
+                    'port' => 12201,
+                ],
+                'appName' => 'app name',
+                'levels' => ['warning', 'error'],
+                'categories' => ['my-category']
+            ]
+        ]
     ]
-  ]
 ]
 ```
 
@@ -61,10 +65,10 @@ Configure from config array
 
   ```php
   Yii::info([
-    'short' => 'Short message or title',  // required. alternate usage variant: `Short message or title` (without a key 'short', but first item in array)
-    'full' => 'Full message',             // optional. full message of log. For example, may be a stack trace as string or other detalized message
-    '_field1' => 'value1',                // optional. additional field starts with '_' symbol
-    '_field2' => 'value2',                // optional. additional field starts with '_' symbol
+      'short' => 'Short message or title',  // required. alternate usage variant: `Short message or title` (without a key 'short', but first item in array)
+      'full' => 'Full message',             // optional. full message of log. For example, may be a stack trace as string or other detalized message
+      '_field1' => 'value1',                // optional. additional field starts with '_' symbol
+      '_field2' => 'value2',                // optional. additional field starts with '_' symbol
   ]);
   ```
 
@@ -72,9 +76,9 @@ Configure from config array
 
   ```php
   try {
-    ... running code with harmful bugs...
+      ... running code with harmful bugs...
   } catch (\Throwable $t) {
-    Yii::warning($t);
+      Yii::warning($t);
   }
   ```
 - Sent short message:
