@@ -3,7 +3,7 @@ yii2-graylog-target
 
 ###### Graylog2 log target for Yii2 framework applications
 
-[![Travis build](https://travis-ci.org/DevGroup-ru/yii2-graylog-target.svg?branch=master)](https://travis-ci.org/DevGroup-ru/yii2-graylog-target.svg?branch=master)
+[![Travis build](https://travis-ci.org/DevGroup-ru/yii2-graylog-target.svg?branch=master)](https://travis-ci.org/DevGroup-ru/yii2-graylog-target)
 
 [![Latest Stable Version](https://poser.pugx.org/devgroup/yii2-graylog-target/version)](https://packagist.org/packages/devgroup/yii2-graylog-target)
 [![Total Downloads](https://poser.pugx.org/devgroup/yii2-graylog-target/downloads)](https://packagist.org/packages/devgroup/yii2-graylog-target)
