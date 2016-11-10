@@ -12,8 +12,6 @@ use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
 use devgroup\grayii\publisher\Publisher;
 use devgroup\grayii\transport\HttpTransport;
-use devgroup\grayii\helper\PhpVersionChecker;
-use devgroup\grayii\helper\PhpVersionCheckerInterface;
 use Psr\Log\LogLevel;
 use Yii;
 use yii\di\Container;
@@ -36,10 +34,6 @@ class GelfTarget extends Target
 
     public $messageValidator = [
         'class' => MessageValidator::class
-    ];
-
-    public $phpVersionChecker = [
-        'class' => PhpVersionChecker::class
     ];
 
     /**
@@ -72,8 +66,6 @@ class GelfTarget extends Target
         $this->container->set(TransportInterface::class, $this->transport);
         $this->container->set(MessageValidatorInterface::class, $this->messageValidator);
         $this->container->set(PublisherInterface::class, $this->publisher);
-
-        $this->container->set(PhpVersionCheckerInterface::class, $this->phpVersionChecker);
     }
 
     /**
@@ -117,14 +109,16 @@ class GelfTarget extends Target
     /**
      * @return MessageValidatorInterface
      */
-    public function getMessageValidator() {
+    public function getMessageValidator()
+    {
         return $this->container->get(MessageValidatorInterface::class);
     }
 
     /**
      * @return PhpVersionCheckerInterface
      */
-    public function getPhpVersionChecker() {
+    public function getPhpVersionChecker()
+    {
         return $this->container->get(PhpVersionCheckerInterface::class);
     }
 
@@ -142,10 +136,10 @@ class GelfTarget extends Target
         $message->setVersion($this->version);
         $message->setHost($this->appName ?: Yii::$app->id);
 
-        if ($this->isThrowableMessage($msg)) {
+        if ($msg instanceof \Exception || $msg instanceof \Throwable) {
             $short = 'Exception';
 
-            if ($this->getPhpVersionChecker()->isPhp70() && $msg instanceof \Error) {
+            if ($msg instanceof \Error) {
                 $short = 'Error';
             }
 
@@ -182,7 +176,8 @@ class GelfTarget extends Target
      * @param int $yiiLevel
      * @return mixed
      */
-    protected function yii2LevelToPsrLevel($yiiLevel) {
+    protected function yii2LevelToPsrLevel($yiiLevel)
+    {
         return $this->_logLevels[$yiiLevel];
     }
 
@@ -192,14 +187,5 @@ class GelfTarget extends Target
     protected function publishMessage($gelfMessage)
     {
         $this->getPublisher()->publish($gelfMessage);
-    }
-
-    private function isThrowableMessage($msg)
-    {
-        if ($this->getPhpVersionChecker()->isPhp70()) {
-            return $msg instanceof \Throwable;
-        } else {
-            return $msg instanceof \Exception;
-        }
     }
 }
