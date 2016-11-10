@@ -1,6 +1,6 @@
 # CHANGELOG
 
-next release
+10.11.2016: 0.9.1 release
     - [break] composer.lock file was removed
     - [brake] `src\helper\PhpVersionChecker.php` was removed
     - [brake] `src\helper\PhpVersionCheckerInterface.php` was removed
