@@ -93,3 +93,7 @@ Tests was placed int the **test** directory. Tests can be running by the command
 - PHP v7.0
 
     `docker run -it --rm --name php70-for-grayii-tests -v "$PWD":/usr/src/myapp -w /usr/src/myapp php:7.0-cli php vendor/bin/codecept run`
+
+- HHVM
+
+    `docker run -it --rm --name hhvm-for-grayii-tests -v "$PWD":/usr/src/myapp -w /usr/src/myapp diegomarangoni/hhvm:cli hhvm vendor/bin/codecept run`
