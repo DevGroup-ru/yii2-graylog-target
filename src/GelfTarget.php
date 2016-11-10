@@ -109,14 +109,16 @@ class GelfTarget extends Target
     /**
      * @return MessageValidatorInterface
      */
-    public function getMessageValidator() {
+    public function getMessageValidator()
+    {
         return $this->container->get(MessageValidatorInterface::class);
     }
 
     /**
      * @return PhpVersionCheckerInterface
      */
-    public function getPhpVersionChecker() {
+    public function getPhpVersionChecker()
+    {
         return $this->container->get(PhpVersionCheckerInterface::class);
     }
 
@@ -174,7 +176,8 @@ class GelfTarget extends Target
      * @param int $yiiLevel
      * @return mixed
      */
-    protected function yii2LevelToPsrLevel($yiiLevel) {
+    protected function yii2LevelToPsrLevel($yiiLevel)
+    {
         return $this->_logLevels[$yiiLevel];
     }
 
