@@ -3,6 +3,15 @@ yii2-graylog-target
 
 ###### Graylog2 log target for Yii2 framework applications
 
+[![Travis build](https://travis-ci.org/DevGroup-ru/yii2-graylog-target.svg?branch=master)](https://travis-ci.org/DevGroup-ru/yii2-graylog-target.svg?branch=master)
+
+[![Latest Stable Version](https://poser.pugx.org/devgroup/yii2-graylog-target/version)](https://packagist.org/packages/devgroup/yii2-graylog-target)
+[![Total Downloads](https://poser.pugx.org/devgroup/yii2-graylog-target/downloads)](https://packagist.org/packages/devgroup/yii2-graylog-target)
+[![Latest Unstable Version](https://poser.pugx.org/devgroup/yii2-graylog-target/v/unstable)](https://packagist.org/packages/devgroup/yii2-graylog-target)
+[![License](https://poser.pugx.org/devgroup/yii2-graylog-target/license)](https://packagist.org/packages/devgroup/yii2-graylog-target)
+
+[![composer.lock available](https://poser.pugx.org/devgroup/yii2-graylog-target/composerlock)](https://packagist.org/packages/devgroup/yii2-graylog-target)
+
 ## Installation
 
 For installation the yii2-graylog-target library in your projects as composer dependency,
