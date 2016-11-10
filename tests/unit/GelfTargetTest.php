@@ -5,7 +5,6 @@ namespace devgroup\grayii\tests;
 use Gelf\Message;
 use Gelf\PublisherInterface;
 use devgroup\grayii\GelfTarget;
-use devgroup\grayii\helper\PhpVersionChecker;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 
@@ -15,6 +14,12 @@ class GelfTargetTest extends \Codeception\Test\Unit
      * @var \UnitTester
      */
     protected $tester;
+
+    private function isPhpVersion7OrMore() {
+        list($uno, $dos, $tres) = phpversion();
+
+        return intval($uno) >= 7;
+    }
 
     public function versionProvider() {
         return [
@@ -177,7 +182,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
     public function testErrorDataFromGelfMessage()
     {
-        if (!(new PhpVersionChecker())->isPhp70()) {
+        if (!$this->isPhpVersion7OrMore()) {
             return;
         }
 
@@ -209,14 +214,14 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
     public function testMessageGenerator()
     {
-        $versionChecker = new PhpVersionChecker();
+        $versionMoreTheSix = $this->isPhpVersion7OrMore();
 
         $target = \Yii::createObject([
             'class' => GelfTarget::class,
             'messages' => [
                 'test message',
                 new \Exception(),
-                $versionChecker->isPhp70() ? new \Error() : "",
+                $versionMoreTheSix ? new \Error() : "",
                 [
                     '_testAdditionalField'
                 ]
@@ -239,7 +244,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
                     self::assertEquals(\Exception::class, get_class($message));
                     break;
                 case 3:
-                    if ($versionChecker->isPhp70()) {
+                    if ($versionMoreTheSix) {
                         self::assertEquals(\Error::class, get_class($message));
                     }
                     break;
