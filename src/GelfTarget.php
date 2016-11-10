@@ -194,6 +194,10 @@ class GelfTarget extends Target
         $this->getPublisher()->publish($gelfMessage);
     }
 
+    /**
+     * @param $msg
+     * @return bool
+     */
     private function isThrowableMessage($msg)
     {
         if ($this->getPhpVersionChecker()->isPhp70()) {

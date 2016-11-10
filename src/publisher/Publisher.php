@@ -14,6 +14,11 @@ use Gelf\Transport\TransportInterface;
  */
 class Publisher extends \Gelf\Publisher
 {
+    /**
+     * Publisher constructor.
+     * @param TransportInterface $transport
+     * @param MessageValidatorInterface $messageValidator
+     */
     public function __construct(TransportInterface $transport, MessageValidatorInterface $messageValidator)
     {
         parent::__construct($transport, $messageValidator);
