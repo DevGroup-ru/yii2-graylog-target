@@ -115,14 +115,6 @@ class GelfTarget extends Target
     }
 
     /**
-     * @return PhpVersionCheckerInterface
-     */
-    public function getPhpVersionChecker()
-    {
-        return $this->container->get(PhpVersionCheckerInterface::class);
-    }
-
-    /**
      * @param array $data
      * @return Message
      */
