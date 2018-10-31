@@ -5,13 +5,13 @@
 
 namespace devgroup\grayii;
 
+use devgroup\grayii\publisher\Publisher;
+use devgroup\grayii\transport\HttpTransport;
 use Gelf\Message;
 use Gelf\MessageValidator;
 use Gelf\MessageValidatorInterface;
 use Gelf\PublisherInterface;
 use Gelf\Transport\TransportInterface;
-use devgroup\grayii\publisher\Publisher;
-use devgroup\grayii\transport\HttpTransport;
 use Psr\Log\LogLevel;
 use Yii;
 use yii\di\Container;
@@ -154,6 +154,8 @@ class GelfTarget extends Target
                 $message->setShortMessage($msg['short']);
             } elseif (!empty($msg[0])) {
                 $message->setShortMessage($msg[0]);
+            } else {
+                $message->setShortMessage(array_shift($msg));
             }
 
             if (!empty($msg['full'])) {
@@ -161,8 +163,8 @@ class GelfTarget extends Target
             }
 
             foreach ($msg as $key => $value) {
-                if (strpos($key, '_') === 0) {
-                    $message->setAdditional($key, $value);
+                if ((!in_array($key, ['short', 'full'])) && $key !== 0) {
+                    $message->setAdditional('_' . $key, $value);
                 }
             }
         }

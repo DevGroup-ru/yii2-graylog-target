@@ -24,5 +24,11 @@
         "psr-4": {
             "devgroup\\grayii\\": "src/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

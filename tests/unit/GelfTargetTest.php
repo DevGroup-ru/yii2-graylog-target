@@ -2,9 +2,9 @@
 
 namespace devgroup\grayii\tests;
 
+use devgroup\grayii\GelfTarget;
 use Gelf\Message;
 use Gelf\PublisherInterface;
-use devgroup\grayii\GelfTarget;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 
@@ -16,9 +16,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
     protected $tester;
 
     private function isPhpVersion7OrMore() {
-        list($uno, $dos, $tres) = phpversion();
-
-        return intval($uno) >= 7;
+        return PHP_MAJOR_VERSION >= 7;
     }
 
     public function versionProvider() {
@@ -47,7 +45,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
         $reason = "";
         $validateStatus = $validator->validate($message, $reason);
-        self::assertTrue($validateStatus, $reason);
+        $this->assertTrue($validateStatus, $reason);
     }
 
     /**
@@ -69,12 +67,12 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
         $reason = "";
         $validateStatus = $validator->validate($message, $reason);
-        self::assertTrue($validateStatus, $reason);
+        $this->assertTrue($validateStatus, $reason);
 
-        self::assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
-        self::assertTrue(is_string($message->getFullMessage()));
-        self::assertNotNull($message->getFile());
-        self::assertNotNull($message->getLine());
+        $this->assertEquals('Exception ' . \Exception::class . ' Test message exception', $message->getShortMessage());
+        $this->assertTrue(is_string($message->getFullMessage()));
+        $this->assertNotNull($message->getFile());
+        $this->assertNotNull($message->getLine());
     }
 
     /**
@@ -101,10 +99,10 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
         $reason = "";
         $validateStatus = $validator->validate($message, $reason);
-        self::assertTrue($validateStatus, $reason);
+        $this->assertTrue($validateStatus, $reason);
 
-        self::assertEquals('Test short message', $message->getShortMessage());
-        self::assertEquals('Test full message', $message->getFullMessage());
+        $this->assertEquals('Test short message', $message->getShortMessage());
+        $this->assertEquals('Test full message', $message->getFullMessage());
     }
 
     /**
@@ -131,10 +129,10 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
         $reason = "";
         $validateStatus = $validator->validate($message, $reason);
-        self::assertTrue($validateStatus, $reason);
+        $this->assertTrue($validateStatus, $reason);
 
-        self::assertEquals('Test short message', $message->getShortMessage());
-        self::assertEquals('Test full message', $message->getFullMessage());
+        $this->assertEquals('Test short message', $message->getShortMessage());
+        $this->assertEquals('Test full message', $message->getFullMessage());
     }
 
 
@@ -147,7 +145,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
             '', Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals(\Yii::$app->id, $message->getHost());
+        $this->assertEquals(\Yii::$app->id, $message->getHost());
     }
 
     public function testAdditionalDataFromGelfMessage()
@@ -162,8 +160,8 @@ class GelfTargetTest extends \Codeception\Test\Unit
             ], Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals('value1', $message->getAdditional('_correctFieldName1'));
-        self::assertEquals('value2', $message->getAdditional('_correctFieldName2'));
+        $this->assertEquals('value1', $message->getShortMessage()); //First value goes to message
+        $this->assertEquals('value2', $message->getAdditional('__correctFieldName2'));
     }
 
     public function testExceptionDataFromGelfMessage()
@@ -177,7 +175,7 @@ class GelfTargetTest extends \Codeception\Test\Unit
             $ex, Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals('Exception ' . get_class($ex) . ' Test message', $message->getShortMessage());
+        $this->assertEquals('Exception ' . get_class($ex) . ' Test message', $message->getShortMessage());
     }
 
     public function testErrorDataFromGelfMessage()
@@ -195,7 +193,63 @@ class GelfTargetTest extends \Codeception\Test\Unit
             $ex, Logger::LEVEL_INFO, null, null
         ]);
 
-        self::assertEquals('Error ' . get_class($ex) . ' Test message', $message->getShortMessage());
+        $this->assertEquals('Error ' . get_class($ex) . ' Test message', $message->getShortMessage());
+    }
+
+    /**
+     * @dataProvider versionProvider
+     */
+    public function testArrayMessageWithoutRequiredDataGetsFirstElementAsMessage($version)
+    {
+        /** @var GelfTarget $target */
+        list($target, $method) = $this->createCreateMessageMethod([
+            'version' => $version
+        ]);
+
+        /** @var Message $message */
+        $message = $method->invoke($target, [
+            [
+                'message' => 'Test short message',
+            ], Logger::LEVEL_INFO, null, null
+        ]);
+
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        $this->assertTrue($validateStatus, $reason);
+
+        $this->assertEquals('Test short message', $message->getShortMessage());
+    }
+
+    /**
+     * @dataProvider versionProvider
+     */
+    public function testArrayMessageWithoutRequiredDataWithAdditionalData($version)
+    {
+        /** @var GelfTarget $target */
+        list($target, $method) = $this->createCreateMessageMethod([
+            'version' => $version
+        ]);
+
+        /** @var Message $message */
+        $message = $method->invoke($target, [
+            [
+                'message' => 'Test short message',
+                'additionaldata1' => 'test1',
+                'additionaldata2' => 'test2'
+            ], Logger::LEVEL_INFO, null, null
+        ]);
+
+        $validator = $target->getMessageValidator();
+
+        $reason = "";
+        $validateStatus = $validator->validate($message, $reason);
+        $this->assertTrue($validateStatus, $reason);
+
+        $this->assertEquals('Test short message', $message->getShortMessage());
+        $this->assertEquals('test1', $message->getAdditional('_additionaldata1'));
+        $this->assertEquals('test2', $message->getAdditional('_additionaldata2'));
     }
 
     protected function createCreateMessageMethod($config = null)
@@ -238,18 +292,18 @@ class GelfTargetTest extends \Codeception\Test\Unit
 
             switch ($counter) {
                 case 1:
-                    self::assertEquals('test message', $message);
+                    $this->assertEquals('test message', $message);
                     break;
                 case 2:
-                    self::assertEquals(\Exception::class, get_class($message));
+                    $this->assertEquals(\Exception::class, get_class($message));
                     break;
                 case 3:
                     if ($versionMoreTheSix) {
-                        self::assertEquals(\Error::class, get_class($message));
+                        $this->assertEquals(\Error::class, get_class($message));
                     }
                     break;
                 case 4:
-                    self::assertTrue(is_array($message));
+                    $this->assertTrue(is_array($message));
                     break;
                 default:
                     throw new \Exception();
